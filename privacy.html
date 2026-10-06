@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>盲盒相簿 — 隱私權政策</title>
+<style>
+  :root { --ground: #f6f3ee; --ink: #2b2723; --dim: #5f574d; --line: #ddd5c9; --code: #ece6dc; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ground: #1d1a17; --ink: #ece4d8; --dim: #b3a898; --line: #3a342e; --code: #2a2622; }
+  }
+  body { margin: 0; background: var(--ground); color: var(--ink);
+         font: 16px/1.75 "Noto Serif TC", "PMingLiU", serif; }
+  main { max-width: 42rem; margin: 0 auto; padding: 2.5rem 16px 4rem; }
+  h1 { font-size: 1.6rem; line-height: 1.35; margin: 0 0 .25rem; }
+  h2 { font-size: 1.15rem; margin: 2.25rem 0 .5rem; }
+  .date { color: var(--dim); margin: 0 0 1.5rem; }
+  code { background: var(--code); padding: .05em .3em; border-radius: 3px;
+         font: .88em/1.5 Consolas, monospace; word-break: break-all; }
+  .table { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; vertical-align: top; padding: .5rem .6rem; border-bottom: 1px solid var(--line); }
+  a { color: inherit; }
+</style>
+</head>
+<body>
+<main>
+<h1>盲盒相簿 — 隱私權政策</h1>
+<p class="date">最後更新：2026-10-06</p>
+
+<h2>一句話</h2>
+<p>這個程式不收集、不上傳、也不分享你的任何資料。照片和紀錄都留在你自己的電腦上。</p>
+
+<h2>不做的事</h2>
+<ul>
+  <li>沒有帳號、沒有登入</li>
+  <li>不上傳照片或任何檔案</li>
+  <li>沒有分析、遙測、崩潰回報、廣告、追蹤</li>
+  <li>不把任何資料交給第三方</li>
+</ul>
+
+<h2>程式在你電腦上存了什麼</h2>
+<div class="table">
+<table>
+  <tr><th>位置</th><th>內容</th></tr>
+  <tr><td><code>%USERPROFILE%\.photo-blindbox\blindbox.db</code></td><td>照片路徑索引、相冊標籤、閱讀紀錄、設定</td></tr>
+  <tr><td><code>%USERPROFILE%\.photo-blindbox\thumbs\</code></td><td>縮圖快取</td></tr>
+  <tr><td><code>&lt;你指定的照片資料夾&gt;\書架\</code></td><td>每本書一個資料夾，裡面是指回原檔的硬連結</td></tr>
+  <tr><td><code>&lt;你指定的照片資料夾&gt;\_待刪除\</code></td><td>你標記待刪的照片（搬移，不是刪除）</td></tr>
+</table>
+</div>
+<p>索引與縮圖都是從你自己的照片產生的，不會離開這台電腦。</p>
+
+<h2>它永遠不會刪除你的照片</h2>
+<p>標記待刪的照片是被<strong>搬移</strong>到 <code>_待刪除</code> 子資料夾。要真的刪除，要你自己去清空那個資料夾。</p>
+<p>這個承諾不是靠文件維持的：<code>tests/test_safety.py</code> 用 AST 解析整個 <code>app/</code>，只要出現任何刪除檔案的呼叫就會讓測試失敗，而它跟著每一次測試自動重跑。</p>
+<p>書架資料夾裡放的是硬連結而不是複本 —— 不佔額外空間，刪掉連結也不會動到原檔。</p>
+
+<h2>唯一的對外連線：中文網頁字型</h2>
+<p>程式介面用到的拉丁字族（書背上的英文）都是內建的檔案，不需要網路。</p>
+<p>中文字型（Noto Serif TC、Chiron Sung HK、Cactus Classical Serif）字面有上萬字，內建會讓程式大上好幾 MB，所以仍向 Google Fonts（<code>fonts.googleapis.com</code>、<code>fonts.gstatic.com</code>）取。那是標準的網頁字型請求：Google 會看到你的 IP 位址與瀏覽器識別字串，但請求裡不包含任何照片、檔名或使用紀錄。</p>
+<p>沒有網路時程式照樣能用，只是中文書名與書背會退回系統內建的中文字型 —— 英文的部分不受影響。</p>
+<p>除此之外，程式不與任何伺服器通訊。</p>
+
+<h2>為什麼需要完整權限</h2>
+<p>程式以完整信任（<code>runFullTrust</code>）執行，因為它要讀取你自己指定的照片資料夾，並在那個資料夾裡建立代表書的子資料夾與硬連結。這些都不是沙箱裡做得到的事。</p>
+<p>它只讀取你指定的那個資料夾，不會去掃其他地方。</p>
+
+<h2>怎麼把資料全部移除</h2>
+<ol>
+  <li>在「設定 → 應用程式」解除安裝</li>
+  <li>刪掉 <code>%USERPROFILE%\.photo-blindbox</code></li>
+  <li>照片資料夾底下的 <code>書架\</code> 可以直接刪（裡面只有連結）。<code>_待刪除\</code> 裡面是你自己的照片，刪之前先確認</li>
+</ol>
+<p>解除安裝本身不會碰 <code>.photo-blindbox</code>，也不會碰你的照片資料夾 —— 這樣重裝新版的時候，既有的書都還在。</p>
+
+<h2>聯絡</h2>
+<p>有問題請寄信到 <a href="mailto:jenho.cheng+unbox@gmail.com">jenho.cheng+unbox@gmail.com</a></p>
+
+<h2>變更</h2>
+<p>政策變更時會更新這一頁最上面的日期。</p>
+</main>
+</body>
+</html>
